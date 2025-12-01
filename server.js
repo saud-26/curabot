@@ -1,5 +1,7 @@
 // Load .env locally only (NOT on Render)
-require("dotenv").config({ override: false, silent: true });
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 
 const express = require("express");
 const cors = require("cors");
@@ -9,26 +11,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Load API Key
 const apiKey = process.env.GEMINI_API_KEY;
-console.log("Loaded API Key:", apiKey ? "OK" : "MISSING");  // <-- IMPORTANT
+console.log("Loaded API Key:", apiKey ? "OK" : "MISSING");
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Status route
+// STATUS ROUTE
 app.get("/", (req, res) => {
     res.send("Curabot Backend is Running Successfully!");
 });
 
-// Chat route
+// CHAT ROUTE
 app.post("/api/chat", async (req, res) => {
     try {
         const userMessage = req.body.message;
+
         if (!userMessage) {
             return res.status(400).json({ error: "Message is required" });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Use the CORRECT model name
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash"
+        });
+
         const result = await model.generateContent(userMessage);
+
         const aiReply = result.response.text();
 
         res.json({ reply: aiReply });
@@ -39,6 +48,7 @@ app.post("/api/chat", async (req, res) => {
     }
 });
 
-// Port for Render or local
+// PORT
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running on port", PORT));
+
