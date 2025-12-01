@@ -1,7 +1,6 @@
 // Load .env locally only (NOT on Render)
-if (process.env.NODE_ENV !== "production") {
-    require("dotenv").config();
-}
+require("dotenv").config({ override: false, silent: true });
+
 
 const express = require("express");
 const cors = require("cors");
@@ -43,3 +42,4 @@ app.post("/api/chat", async (req, res) => {
 // Port for Render or local
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running on port", PORT));
+
