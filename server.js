@@ -1,7 +1,6 @@
 // Load .env locally only (NOT on Render)
 require("dotenv").config({ override: false, silent: true });
 
-
 const express = require("express");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -11,6 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 const apiKey = process.env.GEMINI_API_KEY;
+console.log("Loaded API Key:", apiKey ? "OK" : "MISSING");  // <-- IMPORTANT
+
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // Status route
@@ -27,7 +28,6 @@ app.post("/api/chat", async (req, res) => {
         }
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
         const result = await model.generateContent(userMessage);
         const aiReply = result.response.text();
 
@@ -42,4 +42,3 @@ app.post("/api/chat", async (req, res) => {
 // Port for Render or local
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running on port", PORT));
-
