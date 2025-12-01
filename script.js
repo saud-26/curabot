@@ -1,73 +1,38 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const chatForm = document.getElementById('chat-form');
-    const userInput = document.getElementById('user-input');
-    const chatWindow = document.getElementById('chat-window');
+document.getElementById("chat-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    // The URL of your backend server
-const API_URL = 'http://localhost:3000/get-advice';
+    const input = document.getElementById("user-input");
+    const message = input.value.trim();
+    if (!message) return;
 
+    addMessage(message, "user");
+    input.value = "";
 
-    chatForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const symptoms = userInput.value.trim();
+    try {
+        const response = await fetch("https://curabot-j3co.onrender.com/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+        });
 
-        if (!symptoms) return;
+        const data = await response.json();
 
-        // Display user's message
-        addMessage(symptoms, 'user');
-        
-        // Clear input field and show typing indicator
-        userInput.value = '';
-        const typingIndicator = addMessage('Thinking...', 'bot', true);
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ symptoms }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Network response was not ok.');
-            }
-
-            const data = await response.json();
-            
-            // Remove the "thinking" message
-            typingIndicator.remove();
-            
-            // Display AI's response with formatting
-            addMessage(data.advice, 'bot');
-
-        } catch (error) {
-            console.error('Error:', error);
-            typingIndicator.remove();
-            addMessage(`Sorry, something went wrong: ${error.message}`, 'bot');
+        if (data.reply) {
+            addMessage(data.reply, "bot");
+        } else {
+            addMessage("Sorry, something went wrong: AI service failed.", "bot");
         }
-    });
-
-    function addMessage(text, sender, isTyping = false) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', `${sender}-message`);
-        
-        if (isTyping) {
-            messageElement.id = 'typing-indicator';
-        }
-
-        // Simple markdown-to-HTML conversion
-        let formattedText = text
-            .replace(/\*\*\*(.*?)\*\*\*/g, '<h3>$1</h3>') // For disclaimer/headers
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // For bold text
-            .replace(/\n/g, '<br>');
-
-        messageElement.innerHTML = `<p>${formattedText}</p>`;
-        chatWindow.appendChild(messageElement);
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-        return messageElement;
+    } catch (err) {
+        addMessage("Server error, try again later.", "bot");
+        console.error(err);
     }
-
 });
 
+function addMessage(text, sender) {
+    const chatWindow = document.getElementById("chat-window");
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message " + sender + "-message";
+    messageDiv.textContent = text;
+    chatWindow.appendChild(messageDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
