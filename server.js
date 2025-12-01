@@ -32,9 +32,8 @@ app.post("/api/chat", async (req, res) => {
         }
 
         // Use the CORRECT model name
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash"
-        });
+     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
 
         const result = await model.generateContent(userMessage);
 
@@ -51,4 +50,5 @@ app.post("/api/chat", async (req, res) => {
 // PORT
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running on port", PORT));
+
 
