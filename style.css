@@ -1,0 +1,110 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.chat-container {
+    width: 90%;
+    max-width: 600px;
+    height: 85vh;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.chat-header p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.chat-window {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 85%;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.bot-message {
+    background-color: #e9e9eb;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.chat-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+#user-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#user-input:focus {
+    border-color: #007bff;
+}
+
+.chat-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.chat-form button:hover {
+    background-color: #0056b3;
+}

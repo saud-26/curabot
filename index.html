@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediStore - Fast Medicine Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin-left: auto;
+            margin-right: 30px;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .welcome-message {
+            color: white;
+            font-weight: 500;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="medical" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="1000" height="1000" fill="url(%23medical)"/></svg>');
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* AI Chatbot Link */
+        .ai-chatbot-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4); }
+            50% { box-shadow: 0 15px 40px rgba(79, 172, 254, 0.6); }
+            100% { box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4); }
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #4facfe;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #4facfe;
+        }
+
+        .clear-filters {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .clear-filters:hover {
+            background: #c0392b;
+        }
+
+        .results-info {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal h2 {
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        /* Cart Styles */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .cart-item-price {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quantity-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px;
+        }
+
+        /* Payment Options */
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #4facfe;
+            background: #f8f9fa;
+        }
+
+        .payment-method.selected {
+            border-color: #4facfe;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .payment-method input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .payment-method-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .payment-method-info {
+            flex: 1;
+        }
+
+        .payment-method-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .payment-method-desc {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .card-details {
+            display: none;
+        }
+
+        .card-details.show {
+            display: block;
+        }
+
+        .upi-details {
+            display: none;
+        }
+
+        .upi-details.show {
+            display: block;
+        }
+
+        .upi-id-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-chatbot-link {
+                bottom: 10px;
+                right: 10px;
+                padding: 12px 16px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .filter-controls {
+                justify-content: center;
+            }
+        }
+
+        /* Checkout Form Styles */
+        .checkout-section {
+            margin-bottom: 30px;
+        }
+
+        .checkout-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                🏥 MediStore
+            </div>
+
+            <nav>
+               <ul class="nav-menu">
+                    <li><a href="admin_panel.html">⚙️ Admin Panel</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#order-history" onclick="showOrderHistory()">Order History</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-actions">
+                <!-- Logged Out State -->
+                <div id="loggedOutState">
+                    <button class="btn btn-secondary" onclick="openLoginModal()">
+                        👤 Login
+                    </button>
+                </div>
+                <!-- Logged In State -->
+                <div id="loggedInState" style="display: none; align-items: center; gap: 15px;">
+                    <span class="welcome-message"></span>
+                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+                <button class="btn btn-primary cart-icon" onclick="openCartModal()">
+                    🛒 Cart
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Fast Medicine Delivery</h1>
+                <p>Get your medicines delivered to your doorstep within 30 minutes</p>
+                <div class="hero-features">
+                    <div class="feature">
+                        ⚡ 30-Min Delivery
+                    </div>
+                    <div class="feature">
+                        💊 Genuine Medicines
+                    </div>
+                    <div class="feature">
+                        ☣ Free Delivery
+                    </div>
+                    <div class="feature">
+                        🔒 Secure Payment
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Order History Section -->
+    <section class="section" id="order-history" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">My Order History</h2>
+            <div id="orderHistoryContainer" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <!-- Order history will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Chatbot Link -->
+    <a href="aichatbot.html" class="ai-chatbot-link" target="_blank">
+        🤖 CURABOT
+    </a>
+
+    <!-- Products Section -->
+    <section id="products" class="section">
+        <div class="container">
+            <h2 class="section-title">Available Medicines</h2>
+            
+            <!-- Search and Filter Container -->
+            <div class="search-filter-container">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search for medicines...">
+                    <button class="search-btn" onclick="searchProducts()">🔍 Search</button>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category:</label>
+                        <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                            <option value="Pain Relief">Pain Relief</option>
+                            <option value="Cough & Cold">Cough & Cold</option>
+                            <option value="Digestive">Digestive</option>
+                            <option value="Allergy">Allergy</option>
+                            <option value="Respiratory">Respiratory</option>
+                            <option value="Nausea">Nausea</option>
+                            <option value="Throat Care">Throat Care</option>
+                            <option value="Vitamins">Vitamins</option>
+                            <option value="Topical">Topical</option>
+                            <option value="Sleep">Sleep</option>
+                            <option value="Urinary">Urinary</option>
+                            <option value="Hair Care">Hair Care</option>
+                            <option value="Dental">Dental</option>
+                            <option value="Migraine">Migraine</option>
+                            <option value="Mental Health">Mental Health</option>
+                            <option value="Medical Devices">Medical Devices</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortFilter">Sort By:</label>
+                        <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">Default</option>
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="price-asc">Price (Low-High)</option>
+                            <option value="price-desc">Price (High-Low)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="priceFilter">Price Range:</label>
+                        <select id="priceFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Prices</option>
+                            <option value="0-50">₹0 - ₹50</option>
+                            <option value="51-100">₹51 - ₹100</option>
+                            <option value="101-200">₹101 - ₹200</option>
+                            <option value="201-500">₹201 - ₹500</option>
+                        </select>
+                    </div>
+                    
+                    <button class="clear-filters" onclick="clearFilters()">Clear All</button>
+                </div>
+                
+                <div class="results-info" id="resultsInfo">
+                    Showing all products
+                </div>
+            </div>
+            
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login to Your Account</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="#" onclick="openSignupModal()">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Create New Account</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name:</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number:</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('cartModal')">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cartItems"></div>
+            <div id="cartTotal" class="cart-total"></div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="proceedToCheckout()">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('checkoutModal')">&times;</span>
+            <h2>Checkout</h2>
+            <form id="checkoutForm">
+                <div class="checkout-section">
+                    <h3>Delivery Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code:</label>
+                            <input type="text" id="zipCode" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectPaymentMethod('card')">
+                            <input type="radio" name="paymentMethod" value="card" id="cardPayment">
+                            <div class="payment-method-icon">💳</div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">Credit/Debit Card</div>
+                                <div class="payment-method-desc">Secure payment with your card</div>
+                            </div>
+                        </div>
+              
+                        
+             <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                            <input type="radio" name="paymentMethod" value="upi" id="upiPayment">
+                            <div class="payment-method-icon">🏦</div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">UPI Payment</div>
+                                <div class="payment-method-desc">Pay using any UPI app</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Payment Details -->
+                    <div id="cardDetails" class="card-details">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date:</label>
+                                <input type="text" id="expiryDate" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV:</label>
+                                <input type="text" id="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI Payment Details -->
+                    <div id="upiDetails" class="upi-details">
+                        <div class="form-group">
+                            <label for="upiId">UPI ID:</label>
+                            <input type="text" id="upiId" class="upi-id-input" placeholder="your-upi-id@paytm">
+                        </div>
+                        <div class="form-group" id="upiQrContainer" style="display: none; text-align: center; margin-top: 15px;">
+                            <label>Scan QR Code to Pay:</label>
+                            <div id="upiQrCode" style="margin: 10px auto; width: 200px; height: 200px;"></div>
+                            <p style="font-size: 0.9rem; color: #7f8c8d;">Scan this QR code with any UPI app to complete payment</p>
+                        </div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 10px;">
+                            Enter your UPI ID or scan QR code using any UPI app
+                        </p>
+                    </div>
+                </div>
+
+                <div id="checkoutTotal" class="cart-total"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+ <!-- About Us Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <p style="margin-bottom: 15px; color: #555;">
+                    Welcome to MediStore, your trusted partner for fast and reliable medicine delivery. 
+                    We understand the urgency of your healthcare needs, which is why we are committed 
+                    to delivering genuine medicines right to your doorstep within 30 minutes.
+                </p>
+                <p style="margin-bottom: 15px; color: #555;">
+                    Our mission is to make healthcare accessible and convenient for everyone. 
+                    We partner with certified pharmacies to ensure that all products are authentic 
+                    and of the highest quality. Our user-friendly platform and efficient delivery 
+                    system are designed to provide you with a seamless experience.
+                </p>
+                <p style="color: #555;">
+                    At MediStore, your health and well-being are our top priorities. 
+                    Thank you for choosing us for your medicine needs.
+                </p>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <p style="margin-bottom: 15px; color: #555;">
+                    Have questions or need assistance? Feel free to reach out to us!
+                </p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px; color: #555;">
+                        <strong>Email:</strong> <a href="mailto:anwarulhaquekhan619@gmail.com" style="color: #4facfe; text-decoration: none;">anwarulhaquekhan619@gmail.com</a>
+                    </li>
+                    <li style="margin-bottom: 10px; color: #555;">
+                        <strong>Phone:</strong> <a href="tel:+919969429374" style="color: #4facfe; text-decoration: none;">+91 9969429374</a>
+                    </li>
+                    <li style="margin-bottom: 10px; color: #555;">
+                        <strong>Address:</strong> Reena Mehta College, Bhayandar(W)
+                    </li>
+                </ul>
+                <p style="margin-top: 20px; color: #555;">
+                    You can also use our AI Health Assistant for quick answers to common health queries.
+                </p>
+            </div>
+        </div>
+    </section>
+    <script>
+        
+    // Global state variables
+    let currentUser = null;
+    let cart = [];
+
+    // Load products array from localStorage medicines or fallback to empty array
+    let products = JSON.parse(localStorage.getItem('medicines')) || [];
+
+    // Add icon and description fields to products if missing
+    products = products.map(product => {
+        // Add default icon based on category if icon missing
+        if (!product.icon) {
+            switch (product.category) {
+                case 'Pain Relief':
+                    product.icon = '💊';
+                    break;
+                case 'Cough & Cold':
+                    product.icon = '🧴';
+                    break;
+                case 'Digestive':
+                    product.icon = '🍃';
+                    break;
+                case 'Allergy':
+                    product.icon = '💊';
+                    break;
+                case 'Respiratory':
+                    product.icon = '🫁';
+                    break;
+                case 'Nausea':
+                    product.icon = '💊';
+                    break;
+                case 'Throat Care':
+                    product.icon = '🍬';
+                    break;
+                case 'Vitamins':
+                    product.icon = '💊';
+                    break;
+                case 'Topical':
+                    product.icon = '🧴';
+                    break;
+                case 'Sleep':
+                    product.icon = '💊';
+                    break;
+                case 'Urinary':
+                    product.icon = '💊';
+                    break;
+                case 'Hair Care':
+                    product.icon = '🧴';
+                    break;
+                case 'Dental':
+                    product.icon = '🦷';
+                    break;
+                case 'Migraine':
+                    product.icon = '💊';
+                    break;
+                case 'Mental Health':
+                    product.icon = '🧠';
+                    break;
+                case 'Medical Devices':
+                    product.icon = '📦';
+                    break;
+                default:
+                    product.icon = '💊';
+            }
+        }
+        // Add default description if missing
+        if (!product.description) {
+            product.description = `Category: ${product.category}`;
+        }
+        // Add price string and numericPrice if missing
+        if (!product.price) {
+            product.price = `₹${product.price || 0}`;
+        }
+        if (!product.numericPrice) {
+            product.numericPrice = product.price ? parseFloat(product.price.toString().replace(/[^\d.]/g, '')) : 0;
+        }
+        return product;
+    });
+
+    // Initialize filteredProducts with products
+    let filteredProducts = [...products];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load current user
+            const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (loggedInUser) {
+                currentUser = loggedInUser;
+            }
+            // Load cart from storage
+            cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            updateUserUI(); // Set initial UI state
+            loadProducts();
+            updateCartCount();
+        });
+        
+        // Search and Filter Functions
+        function searchProducts() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+
+            // Start with all products
+            filteredProducts = [...products];
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Apply category filter
+            if (categoryFilter) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.category === categoryFilter
+                );
+            }
+
+            // Apply price filter
+            if (priceFilter) {
+                const [min, max] = priceFilter.split('-').map(Number);
+                filteredProducts = filteredProducts.filter(product => 
+                    product.numericPrice >= min && product.numericPrice <= max
+                );
+            }
+
+            // Apply sorting
+            if (sortFilter) {
+                switch (sortFilter) {
+                    case 'name-asc':
+                        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                        break;
+                    case 'name-desc':
+                        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+                        break;
+                    case 'price-asc':
+                        filteredProducts.sort((a, b) => a.numericPrice - b.numericPrice);
+                        break;
+                    case 'price-desc':
+                        filteredProducts.sort((a, b) => b.numericPrice - a.numericPrice);
+                        break;
+                }
+            }
+
+            loadProducts();
+            updateResultsInfo();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('sortFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            filteredProducts = [...products];
+            loadProducts();
+            updateResultsInfo();
+        }
+
+        function updateResultsInfo() {
+            const resultsInfo = document.getElementById('resultsInfo');
+            const count = filteredProducts.length;
+            const total = products.length;
+            
+            if (count === total) {
+                resultsInfo.textContent = `Showing all ${total} products`;
+            } else {
+                resultsInfo.textContent = `Showing ${count} of ${total} products`;
+            }
+        }
+
+        // Load products into the grid
+        function loadProducts() {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = '<div style="text-align: center; color: #7f8c8d; padding: 40px;">No products found matching your criteria.</div>';
+                return;
+            }
+
+            // Get medicines data from localStorage for stock information
+            const medicinesData = JSON.parse(localStorage.getItem('medicines')) || [];
+
+            filteredProducts.forEach(product => {
+                // Find corresponding medicine data for stock information
+                const medicineData = medicinesData.find(med => med.name === product.name || med.id === product.id);
+                const stock = medicineData ? medicineData.stock : 'In Stock'; // Default to 'In Stock' if not found
+                const stockMessage = typeof stock === 'number' ? (stock > 0 ? `In Stock (${stock} available)` : 'Out of Stock') : stock;
+                const isOutOfStock = typeof stock === 'number' && stock <= 0;
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">${product.icon}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-description">${product.description}</div>
+                    <div class="product-price">${product.price}</div>
+                    <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">${stockMessage}</div>
+                    <div class="product-actions">
+                        <button class="btn-add-cart" onclick="addToCart(${product.id})" ${isOutOfStock ? 'disabled' : ''} style="${isOutOfStock ? 'background: #ccc;' : ''}">
+                            ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                        </button>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Add product to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            // Check stock availability
+            const medicinesData = JSON.parse(localStorage.getItem('medicines')) || [];
+            const medicineData = medicinesData.find(med => med.id === productId);
+            const stock = medicineData ? medicineData.stock : null;
+            
+            // Check if item already exists in cart
+            const existingItem = cart.find(item => item.id === productId);
+            const requestedQuantity = existingItem ? existingItem.quantity + 1 : 1;
+            
+            // Check if there's enough stock
+            if (stock !== null && requestedQuantity > stock) {
+                showNotification(`Sorry, only ${stock} units of ${product.name} are available in stock.`);
+                return;
+            }
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+
+            saveCart();
+            updateCartCount();
+            showNotification(`${product.name} added to cart!`);
+        }
+
+        // Update cart count display
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #43e97b, #38f9d7);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 3000;
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+
+        // Modal functions
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function openSignupModal() {
+            closeModal('loginModal');
+            document.getElementById('signupModal').style.display = 'flex';
+        }
+
+        function openCartModal() {
+            updateCartDisplay();
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                cartTotal.innerHTML = '';
+                return;
+            }
+
+            let totalAmount = 0;
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+                const itemTotal = item.numericPrice * item.quantity;
+                totalAmount += itemTotal;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">₹${item.numericPrice} each</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            <button class="btn btn-secondary" style="margin-left: 10px; padding: 5px 10px;" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                        <div><strong>Subtotal: ₹${itemTotal}</strong></div>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+
+            cartTotal.innerHTML = `Total: ₹${totalAmount}`;
+        }
+
+        // Update item quantity
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                const newQuantity = item.quantity + change;
+                
+                // Check stock availability
+                const medicinesData = JSON.parse(localStorage.getItem('medicines')) || [];
+                const medicineData = medicinesData.find(med => med.id === productId);
+                const stock = medicineData ? medicineData.stock : null;
+                
+                // Check if there's enough stock for the new quantity
+                if (stock !== null && newQuantity > stock) {
+                    showNotification(`Sorry, only ${stock} units of ${item.name} are available in stock.`);
+                    return;
+                }
+                
+                item.quantity = newQuantity;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    saveCart();
+                    updateCartDisplay();
+                    updateCartCount();
+                }
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            updateCartDisplay();
+            updateCartCount();
+        }
+
+        // Proceed to checkout
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+
+            if (!currentUser) {
+                closeModal('cartModal');
+                openLoginModal();
+                showNotification('Please login to proceed with checkout');
+                return;
+            }
+
+            const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+            document.getElementById('checkoutTotal').innerHTML = `Total Amount: ₹${totalAmount}`;
+            
+            closeModal('cartModal');
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        // Handle login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                closeModal('loginModal');
+                showNotification(`Welcome back, ${currentUser.name}!`);
+                updateUserUI();
+            } else {
+                showNotification('Invalid email or password');
+            }
+        });
+
+        // Handle signup form
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const phone = document.getElementById('signupPhone').value;
+
+            // Get users from localStorage
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Check if user already exists
+            if (users.some(u => u.email === email)) {
+                showNotification('User with this email already exists');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                _id: 'user_' + Date.now(),
+                name,
+                email,
+                password,
+                phone,
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            currentUser = {
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                phone: newUser.phone
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            closeModal('signupModal');
+            showNotification('Account created successfully!');
+            updateUserUI();
+        });
+
+        // Handle checkout form
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+            if (!selectedPayment) {
+                showNotification('Please select a payment method');
+                return;
+            }
+
+            // Get form data
+            const orderData = {
+                orderId: 'ORD' + Date.now(),
+                userId: currentUser ? currentUser._id : null,
+                customer: {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    zipCode: document.getElementById('zipCode').value,
+                    phone: document.getElementById('phone').value
+                },
+                paymentMethod: selectedPayment.value,
+                items: cart,
+                totalAmount: cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0),
+                orderDate: new Date().toISOString()
+            };
+
+            // Validate payment method specific fields
+            if (selectedPayment.value === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardNumber || !expiryDate || !cvv) {
+                    showNotification('Please fill in all card details');
+                    return;
+                }
+                
+                orderData.payment = {
+                    cardNumber: cardNumber,
+                    expiryDate: expiryDate,
+                    cvv: cvv
+                };
+            } else if (selectedPayment.value === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                if (!upiId) {
+                    showNotification('Please enter your UPI ID');
+                    return;
+                }
+                orderData.payment = { upiId: upiId };
+            } else if (selectedPayment.value === 'cod') {
+                // For Cash on Delivery, no additional payment data is needed
+                orderData.payment = { method: 'Cash on Delivery' };
+            }
+
+            // Process order
+            processOrder(orderData);
+        });
+
+        // Process order
+        function processOrder(orderData) {
+            const submitBtn = document.querySelector('#checkoutForm button[type="submit"]');
+            submitBtn.innerHTML = 'Processing Order...';
+            submitBtn.disabled = true;
+
+            // Get medicines data from localStorage
+            let medicinesData = JSON.parse(localStorage.getItem('medicines')) || [];
+            
+            // Check stock availability for all items in cart
+            let stockAvailable = true;
+            let stockMessage = '';
+            
+            for (const item of orderData.items) {
+                const medicine = medicinesData.find(med => med.id === item.id);
+                if (medicine && medicine.stock < item.quantity) {
+                    stockAvailable = false;
+                    stockMessage = `Sorry, only ${medicine.stock} units of ${item.name} are available in stock.`;
+                    break;
+                }
+            }
+            
+            if (!stockAvailable) {
+                showNotification(stockMessage);
+                submitBtn.innerHTML = 'Place Order';
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            // Reduce stock for each item in the order
+            orderData.items.forEach(item => {
+                const medicineIndex = medicinesData.findIndex(med => med.id === item.id);
+                if (medicineIndex !== -1 && medicinesData[medicineIndex].stock !== undefined) {
+                    medicinesData[medicineIndex].stock -= item.quantity;
+                }
+            });
+            
+            // Save updated medicines data
+            localStorage.setItem('medicines', JSON.stringify(medicinesData));
+
+            // Get orders from localStorage
+            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            orders.push(orderData);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            cart = [];
+            saveCart();
+            updateCartCount();
+            closeModal('checkoutModal');
+            showOrderSuccess(orderData.orderId, orderData.totalAmount, orderData.paymentMethod);
+            
+            document.getElementById('checkoutForm').reset();
+            document.querySelectorAll('.payment-method').forEach(pm => pm.classList.remove('selected'));
+            document.getElementById('cardDetails').classList.remove('show');
+            document.getElementById('upiDetails').classList.remove('show');
+            submitBtn.innerHTML = 'Place Order';
+            submitBtn.disabled = false;
+            
+            // Reload products to update stock display
+            loadProducts();
+        }
+
+        // Show order success
+        function showOrderSuccess(orderId, totalAmount, paymentMethod) {
+            const paymentMethodNames = {
+                'card': 'Credit/Debit Card',
+                'gpay': 'Google Pay',
+                'upi': 'UPI Payment',
+                'cod': 'Cash on Delivery'
+            };
+
+            const successModal = document.createElement('div');
+            successModal.className = 'modal';
+            successModal.style.display = 'flex';
+            successModal.innerHTML = `
+                <div class="modal-content" style="text-align: center;">
+                    <div style="font-size: 4rem; color: #43e97b; margin-bottom: 20px;">✅</div>
+                    <h2 style="color: #2c3e50; margin-bottom: 20px;">Order Placed Successfully!</h2>
+                    <div class="success-message">
+                        <p><strong>Order ID:</strong> ${orderId}</p>
+                        <p><strong>Total Amount:</strong> ₹${totalAmount}</p>
+                        <p><strong>Payment Method:</strong> ${paymentMethodNames[paymentMethod]}</p>
+                        <p><strong>Estimated Delivery:</strong> 30 minutes</p>
+                    </div>
+                    <p style="color: #7f8c8d; margin: 20px 0;">
+                        Your medicines will be delivered to your address within 30 minutes. 
+                        You will receive SMS updates about your order status.
+                    </p>
+                    <button class="btn btn-primary" onclick="closeOrderSuccess()" style="width: 100%;">
+                        Continue Shopping
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(successModal);
+        }
+
+        // Close order success modal
+        function closeOrderSuccess() {
+            const successModal = document.querySelector('.modal:last-child');
+            if (successModal) {
+                successModal.remove();
+            }
+        }
+
+        // Update user UI after login
+        function updateUserUI() {
+            const loggedOutState = document.getElementById('loggedOutState');
+            const loggedInState = document.getElementById('loggedInState');
+            const welcomeMessage = loggedInState.querySelector('.welcome-message');
+
+            if (currentUser) {
+                loggedOutState.style.display = 'none';
+                loggedInState.style.display = 'flex';
+                welcomeMessage.textContent = `Welcome, ${currentUser.name}!`;
+            } else {
+                loggedOutState.style.display = 'block';
+                loggedInState.style.display = 'none';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateUserUI();
+            showNotification('Logged out successfully!');
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+
+        // Format card number input
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = value;
+        });
+
+        // Format expiry date input
+        document.getElementById('expiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Limit CVV input to 3 digits
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
+
+        // Validate UPI ID format
+        document.getElementById('upiId').addEventListener('input', function(e) {
+            const value = e.target.value;
+            const isValid = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(value);
+            
+            if (value && !isValid) {
+                e.target.style.borderColor = '#e74c3c';
+            } else {
+                e.target.style.borderColor = '#4facfe';
+            }
+        });
+
+        // Generate UPI QR Code
+        function generateUpiQrCode(upiId, amount, note) {
+            // Get merchant UPI ID from localStorage or use provided UPI ID
+            const merchantUpiId = localStorage.getItem('merchantUpiId') || upiId;
+            
+            // Simple UPI QR code format
+            const qrData = `upi://pay?pa=${merchantUpiId}&pn=MediStore&mc=0000&tid=0000&tr=0000&tn=${note}&am=${amount}&cu=INR`;
+            return qrData;
+        }
+
+        // Payment method selection
+        function selectPaymentMethod(method) {
+            // Clear all selected states
+            document.querySelectorAll('.payment-method').forEach(pm => {
+                pm.classList.remove('selected');
+            });
+            
+            // Hide all payment details
+            document.getElementById('cardDetails').classList.remove('show');
+            document.getElementById('upiDetails').classList.remove('show');
+            
+            // Select the clicked method
+            const selectedMethod = document.querySelector(`#${method}Payment`).closest('.payment-method');
+            selectedMethod.classList.add('selected');
+            document.querySelector(`#${method}Payment`).checked = true;
+            
+            // Show relevant payment details
+            if (method === 'card') {
+                document.getElementById('cardDetails').classList.add('show');
+            } else if (method === 'upi') {
+                document.getElementById('upiDetails').classList.add('show');
+                // Generate QR code for UPI payment
+                const upiId = document.getElementById('upiId').value;
+                const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+                if (upiId) {
+                    const qrCodeUrl = generateUpiQrCode(upiId, totalAmount, "Medicine Order");
+                    document.getElementById('upiQrCode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeUrl)}" alt="UPI QR Code" style="width: 200px; height: 200px;">`;
+                    document.getElementById('upiQrContainer').style.display = 'block';
+                }
+            }
+        }
+
+        // Update QR code when UPI ID changes
+        document.getElementById('upiId').addEventListener('change', function(e) {
+            const upiId = e.target.value;
+            const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+            if (upiId && document.getElementById('upiPayment').checked) {
+                const qrCodeUrl = generateUpiQrCode(upiId, totalAmount, "Medicine Order");
+                document.getElementById('upiQrCode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeUrl)}" alt="UPI QR Code" style="width: 200px; height: 200px;">`;
+                document.getElementById('upiQrContainer').style.display = 'block';
+            }
+        });
+
+
+        // Add CSS animation for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize results info
+        updateResultsInfo();
+
+        // Show order history function
+        function showOrderHistory() {
+            if (!currentUser) {
+                showNotification('Please login to view order history');
+                openLoginModal();
+                return;
+            }
+
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const userOrders = orders.filter(order => order.userId === currentUser._id);
+
+            const container = document.getElementById('orderHistoryContainer');
+            const orderHistorySection = document.getElementById('order-history');
+
+            if (userOrders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 40px;">You have no order history yet.</p>';
+            } else {
+                let html = `
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                                    <th style="padding: 15px; text-align: left; color: #555; font-weight: 600;">Order ID</th>
+                                    <th style="padding: 15px; text-align: left; color: #555; font-weight: 600;">Date</th>
+                                    <th style="padding: 15px; text-align: left; color: #555; font-weight: 600;">Items</th>
+                                    <th style="padding: 15px; text-align: left; color: #555; font-weight: 600;">Amount</th>
+                                    <th style="padding: 15px; text-align: left; color: #555; font-weight: 600;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                userOrders.forEach(order => {
+                    const orderDate = new Date(order.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    const itemsList = order.items.map(item => `${item.name} (${item.quantity})`).join(', ');
+
+                    // Determine status color based on order status
+                    let statusColor = '#27ae60'; // default green
+                    let bgColor = '#d5f5e3'; // default light green background
+                    if (order.status) {
+                        const statusLower = order.status.toLowerCase();
+                        if (statusLower === 'pending' || statusLower === 'processing') {
+                            statusColor = '#f39c12'; // orange
+                            bgColor = '#fcf3cf'; // light orange background
+                        } else if (statusLower === 'out for delivery') {
+                            statusColor = '#2980b9'; // blue
+                            bgColor = '#d6eaf8'; // light blue background
+                        } else if (statusLower === 'cancelled') {
+                            statusColor = '#c0392b'; // red
+                            bgColor = '#f9ebea'; // light red background
+                        } else if (statusLower === 'delivered') {
+                            statusColor = '#27ae60'; // green
+                            bgColor = '#d5f5e3'; // light green background
+                        }
+                    }
+
+                    html += `
+                        <tr style="border-bottom: 1px solid #e9ecef;">
+                            <td style="padding: 15px;">${order.orderId}</td>
+                            <td style="padding: 15px;">${orderDate}</td>
+                            <td style="padding: 15px;">${itemsList}</td>
+                            <td style="padding: 15px;">₹${order.totalAmount.toFixed(2)}</td>
+                            <td style="padding: 15px;">
+                                <span style="background: ${bgColor}; color: ${statusColor}; padding: 5px 10px; border-radius: 15px; font-size: 12px;">
+                                    ${order.status || 'Unknown'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+            }
+
+            // Show the order history section
+            orderHistorySection.style.display = 'block';
+            
+            // Scroll to the order history section
+            orderHistorySection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+    // Remove Razorpay integration and restore UPI QR code generation
+
+    // Generate UPI QR Code
+    function generateUpiQrCode(upiId, amount, note) {
+        // Get merchant UPI ID from localStorage or use provided UPI ID
+        const merchantUpiId = localStorage.getItem('merchantUpiId') || upiId;
+        
+        // Simple UPI QR code format
+        const qrData = `upi://pay?pa=${merchantUpiId}&pn=MediStore&mc=0000&tid=0000&tr=0000&tn=${note}&am=${amount}&cu=INR`;
+        return qrData;
+    }
+
+    // Payment method selection
+    function selectPaymentMethod(method) {
+        // Clear all selected states
+        document.querySelectorAll('.payment-method').forEach(pm => {
+            pm.classList.remove('selected');
+        });
+        
+        // Hide all payment details
+        document.getElementById('cardDetails').classList.remove('show');
+        document.getElementById('upiDetails').classList.remove('show');
+        
+        // Select the clicked method
+        const selectedMethod = document.querySelector(`#${method}Payment`).closest('.payment-method');
+        selectedMethod.classList.add('selected');
+        document.querySelector(`#${method}Payment`).checked = true;
+        
+        // Show relevant payment details
+        if (method === 'card') {
+            document.getElementById('cardDetails').classList.add('show');
+        } else if (method === 'upi') {
+            document.getElementById('upiDetails').classList.add('show');
+            // Generate QR code for UPI payment
+            const upiId = document.getElementById('upiId').value;
+            const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+            if (upiId) {
+                const qrCodeUrl = generateUpiQrCode(upiId, totalAmount, "Medicine Order");
+                document.getElementById('upiQrCode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeUrl)}" alt="UPI QR Code" style="width: 200px; height: 200px;">`;
+                document.getElementById('upiQrContainer').style.display = 'block';
+            }
+        }
+    }
+
+    // Update QR code when UPI ID changes
+    document.getElementById('upiId').addEventListener('change', function(e) {
+        const upiId = e.target.value;
+        const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+        if (upiId && document.getElementById('upiPayment').checked) {
+            const qrCodeUrl = generateUpiQrCode(upiId, totalAmount, "Medicine Order");
+            document.getElementById('upiQrCode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeUrl)}" alt="UPI QR Code" style="width: 200px; height: 200px;">`;
+            document.getElementById('upiQrContainer').style.display = 'block';
+        }
+    });
+
+    // Modify proceedToCheckout to show checkout modal
+    function proceedToCheckout() {
+        if (cart.length === 0) {
+            showNotification('Your cart is empty!');
+            return;
+        }
+
+        if (!currentUser) {
+            closeModal('cartModal');
+            openLoginModal();
+            showNotification('Please login to proceed with checkout');
+            return;
+        }
+
+        const totalAmount = cart.reduce((sum, item) => sum + (item.numericPrice * item.quantity), 0);
+        document.getElementById('checkoutTotal').innerHTML = `Total Amount: ₹${totalAmount}`;
+        
+        closeModal('cartModal');
+        document.getElementById('checkoutModal').style.display = 'flex';
+    }
+
+    </script>
+    <!-- Initialize sample data -->
+    <script src="init_data.js"></script>
+</body>
+
+</html>

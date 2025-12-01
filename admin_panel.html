@@ -1,0 +1,1124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Medical Delivery</title>
+  <!-- Chart.js library for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Font Awesome for the admin icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f7;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Login Form Styles */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #10bfae, #0c7a72);
+    }
+    
+    .login-form {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    
+    .login-form h2 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    
+    .login-form .admin-icon {
+      font-size: 60px;
+      color: #10bfae;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus {
+      border-color: #10bfae;
+      outline: none;
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: #10bfae;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .login-btn:hover {
+      background: #0c9d8e;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      margin-top: 15px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    /* Dashboard Styles (hidden initially) */
+    .dashboard {
+      display: none;
+    }
+    
+    nav {
+      background: #10bfae;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+    }
+    
+    nav .nav-links a {
+      color: #fff;
+      margin-right: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    nav .nav-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .admin-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logout-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .dashboard-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgb(0 0 0 / 0.1);
+    }
+    
+    h2 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 40px;
+    }
+    
+    .stats-cards {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .card {
+      background: #effcf6;
+      padding: 20px;
+      border-radius: 8px;
+      min-width: 160px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgb(16 191 174 / 0.2);
+      transition: box-shadow 0.3s ease;
+      cursor: default;
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 16px rgb(16 191 174 / 0.35);
+    }
+    
+    .card i {
+      font-size: 36px;
+      color: #10bfae;
+      margin-bottom: 8px;
+    }
+    
+    .card b {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 4px;
+      color: #0c7a72;
+    }
+    
+    .card-description {
+      color: #555;
+      font-size: 16px;
+    }
+    
+    .chart-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      box-shadow: 0 0 6px #eee;
+      border-radius: 8px;
+      padding: 32px;
+    }
+    
+    .chart-container h3 {
+      margin-bottom: 24px;
+      color: #333;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Data Table Styles */
+    .data-table-container {
+      margin-top: 50px;
+    }
+
+    .data-table-container h3 {
+      color: #333;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f0f4f7;
+      padding-bottom: 10px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    .data-table th, .data-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .data-table th {
+      background-color: #f8f9fa;
+      color: #555;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .data-table tbody tr:hover {
+      background-color: #f1faff;
+    }
+
+    .data-table td {
+      color: #333;
+    }
+
+    .table-controls {
+      margin-bottom: 15px;
+      display: flex;
+    }
+
+    .table-controls input {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 25px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .table-controls input:focus {
+      border-color: #10bfae;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s ease;
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      border-color: #10bfae;
+      outline: none;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 600;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Login Form -->
+  <div id="loginContainer" class="login-container">
+    <div class="login-form">
+      <i class="fas fa-user-shield admin-icon"></i>
+      <h2>Admin Login</h2>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      <button type="button" class="login-btn" onclick="login()">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+      <div id="errorMessage" class="error-message">
+        Invalid email or password. Please try again.
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard (hidden initially) -->
+  <div id="dashboard" class="dashboard">
+    <nav>
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Shop</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="admin-info">
+        <i class="fas fa-user-shield" style="font-size:20px; color:#fff;"></i>
+        <span id="adminEmail">Admin</span>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </nav>
+
+    <div class="dashboard-container">
+      <h2>Admin Dashboard</h2>
+      <div class="stats-cards">
+        <div class="card" style="background:#effcf6; color:#0c7a72;">
+          <i class="fas fa-capsules"></i>
+          <b id="totalProducts">0</b>
+          <div class="card-description">Medicines</div>
+        </div>
+        <div class="card" style="background:#f3effc; color:#4b3f9f;">
+          <i class="fas fa-box"></i>
+          <b id="totalOrders">0</b>
+          <div class="card-description">Orders</div>
+        </div>
+        <div class="card" style="background:#fcf6ee; color:#a67e11;">
+          <i class="fas fa-user-injured"></i>
+          <b id="totalUsers">0</b>
+          <div class="card-description">Total Users</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3>Monthly Orders Growth</h3>
+        <canvas id="growthChart" height="180"></canvas>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="data-table-container">
+        <div class="table-controls">
+          <input type="text" id="orderSearch" onkeyup="filterOrders()" placeholder="Search orders by ID or Customer...">
+        </div>
+        <h3><i class="fas fa-receipt"></i> Recent Orders</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Payment Method</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <!-- Order rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Users Table -->
+      <div class="data-table-container">
+        <div class="table-controls">
+          <input type="text" id="userSearch" onkeyup="filterUsers()" placeholder="Search users by Name or Email...">
+        </div>
+        <h3><i class="fas fa-users"></i> Registered Users</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Joined On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- User rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Medicines Table Section -->
+      <div class="data-table-container" style="margin-top: 50px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3><i class="fas fa-pills"></i> Manage Medicines</h3>
+          <button class="btn" onclick="showAddMedicineForm()" style="background: #10bfae; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            <i class="fas fa-plus"></i> Add New Medicine
+          </button>
+        </div>
+        <table class="data-table" id="medicinesTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price (₹)</th>
+              <th>Category</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="medicinesTableBody">
+            <!-- Medicine rows will be inserted here -->
+          </tbody>
+        </table>
+        
+        <!-- Add Medicine Form (hidden by default) -->
+        <div id="addMedicineForm" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
+          <h4>Add New Medicine</h4>
+          <div class="form-group">
+            <label for="medicineName">Medicine Name:</label>
+            <input type="text" id="medicineName" class="form-control" placeholder="Enter medicine name">
+          </div>
+          <div class="form-group">
+            <label for="medicinePrice">Price (₹):</label>
+            <input type="number" id="medicinePrice" class="form-control" placeholder="Enter price" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="medicineCategory">Category:</label>
+            <select id="medicineCategory" class="form-control">
+              <option value="Pain Relief">Pain Relief</option>
+              <option value="Cough & Cold">Cough & Cold</option>
+              <option value="Digestive">Digestive</option>
+              <option value="Allergy">Allergy</option>
+              <option value="Respiratory">Respiratory</option>
+              <option value="Nausea">Nausea</option>
+              <option value="Throat Care">Throat Care</option>
+              <option value="Vitamins">Vitamins</option>
+              <option value="Topical">Topical</option>
+              <option value="Sleep">Sleep</option>
+              <option value="Urinary">Urinary</option>
+              <option value="Hair Care">Hair Care</option>
+              <option value="Dental">Dental</option>
+              <option value="Migraine">Migraine</option>
+              <option value="fever">fever</option>
+              <option value="head ache">head ache</option>
+              <option value="Mental Health">Mental Health</option>
+              <option value="Medical Devices">Medical Devices</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="medicineStock">Stock Quantity:</label>
+            <input type="number" id="medicineStock" class="form-control" placeholder="Enter stock quantity" min="0">
+          </div>
+          <button class="btn" onclick="addNewMedicine()" style="background: #10bfae; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+            Add Medicine
+          </button>
+          <button class="btn" onclick="cancelAddMedicine()" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            Cancel
+          </button>
+        </div>
+      </div>
+      
+      <!-- UPI Settings Section -->
+      <div class="data-table-container" style="margin-top: 50px;">
+        <h3><i class="fas fa-cog"></i> UPI Settings</h3>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+          <div class="form-group">
+            <label for="merchantUpiId">Your UPI ID (for receiving payments):</label>
+            <input type="text" id="merchantUpiId" class="form-control" placeholder="your-upi-id@paytm" style="max-width: 400px;">
+          </div>
+          <button class="btn" onclick="saveMerchantUpiId()" style="background: #10bfae; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            Save UPI ID
+          </button>
+        </div>
+      </div>
+      
+      <!-- UPI Payments Section -->
+      <div class="data-table-container" style="margin-top: 50px;">
+        <h3><i class="fas fa-qrcode"></i> UPI Payments</h3>
+        <div class="table-controls">
+          <input type="text" id="upiSearch" onkeyup="filterUpiPayments()" placeholder="Search UPI payments by Order ID or UPI ID...">
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer UPI ID</th>
+              <th>Amount (₹)</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="upiPaymentsTableBody">
+            <!-- UPI payment rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Admin credentials
+    const ADMIN_EMAIL = "anwarulhaquekhan619@gmail.com";
+    const ADMIN_PASSWORD = "Print@123";
+
+    // Global variables to hold the full data sets for filtering
+    let allOrders = [];
+    let allUsers = [];
+    let orderStatuses = {}; // To track unsaved status changes
+    
+    // Login function
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+      
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        // Hide login form and show dashboard
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('adminEmail').textContent = email;
+        
+        // Load data and initialize chart
+        loadDashboardData();
+        
+        // Hide error message
+        errorMessage.style.display = 'none';
+      } else {
+        // Show error message
+        errorMessage.style.display = 'block';
+        
+        // Clear password field
+        document.getElementById('password').value = '';
+      }
+    }
+    
+    // Logout function
+    function logout() {
+      // Show login form and hide dashboard
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+      
+      // Clear form fields
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('orderSearch').value = '';
+      document.getElementById('userSearch').value = '';
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+    
+    // Initialize chart
+    function initializeChart(labels, data) {
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      if (window.growthChart instanceof Chart) { window.growthChart.destroy(); } // Destroy old chart instance
+      const growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length > 0 ? labels : ['No Data'],
+          datasets: [{
+            label: 'Order Growth',
+            data: data.length > 0 ? data : [0],
+            backgroundColor: 'rgba(16,191,174,0.14)',
+            borderColor: '#10bfae',
+            borderWidth: 3,
+            pointRadius: 5,
+            fill: true,
+            tension: 0.35,
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+      window.growthChart = growthChart;
+    }
+    
+    // Populate the orders table
+    function populateOrdersTable(orders) {
+        const tableBody = document.getElementById('ordersTableBody');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        if (orders.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">No orders found.</td></tr>';
+            return;
+        }
+
+        orders.forEach(order => {
+            const row = document.createElement('tr');
+            const orderDate = new Date(order.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const customerName = `${order.customer.firstName} ${order.customer.lastName}`;
+            const address = `${order.customer.address}, ${order.customer.city}, ${order.customer.zipCode}`;
+            
+            // Define status options
+            const statusOptions = ['Pending', 'Processing', 'Out for Delivery', 'Delivered', 'Cancelled'];
+            let statusOptionsHTML = '';
+            statusOptions.forEach(option => {
+                const selected = option === order.status ? 'selected' : '';
+                statusOptionsHTML += `<option value="${option}" ${selected}>${option}</option>`;
+            });
+            
+            row.innerHTML = `
+                <td>${order.orderId}</td>
+                <td>${customerName}</td>
+                <td>₹${order.totalAmount.toFixed(2)}</td>
+                <td>${orderDate}</td>
+                <td>${order.paymentMethod.toUpperCase()}</td>
+                <td>${address}</td>
+                <td>
+                    <select onchange="updateOrderStatus('${order.orderId}', this.value)" style="padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+                        ${statusOptionsHTML}
+                    </select>
+                </td>
+                <td>
+                    <button onclick="saveOrderStatus('${order.orderId}')" style="background: #10bfae; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                        Save
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Populate the users table
+    function populateUsersTable(users) {
+        const tableBody = document.getElementById('usersTableBody');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        if (users.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">No users found.</td></tr>';
+            return;
+        }
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            const joinDate = new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            row.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.phone}</td>
+                <td>${joinDate}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteUser('${user._id}')">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Filter and repopulate the orders table
+    function filterOrders() {
+        const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+        const filteredOrders = allOrders.filter(order => {
+            const customerName = `${order.customer.firstName} ${order.customer.lastName}`;
+            return order.orderId.toLowerCase().includes(searchTerm) ||
+                   customerName.toLowerCase().includes(searchTerm);
+        });
+        populateOrdersTable(filteredOrders);
+    }
+
+    // Filter and repopulate the users table
+    function filterUsers() {
+        const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+        const filteredUsers = allUsers.filter(user => {
+            return user.name.toLowerCase().includes(searchTerm) ||
+                   user.email.toLowerCase().includes(searchTerm);
+        });
+        populateUsersTable(filteredUsers);
+    }
+
+    // Delete a user
+    function deleteUser(userId) {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            // Get users from localStorage
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Remove the user
+            users = users.filter(user => user._id !== userId);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('User deleted successfully!');
+            
+            allUsers = users;
+            populateUsersTable(allUsers);
+            document.getElementById('totalUsers').textContent = allUsers.length;
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    // Update order status in memory (not saved yet)
+    function updateOrderStatus(orderId, newStatus) {
+        // Store the new status in a temporary object
+        orderStatuses[orderId] = newStatus;
+    }
+
+    // Save order status to localStorage
+    function saveOrderStatus(orderId) {
+        // Check if there's a pending status update for this order
+        if (!orderStatuses.hasOwnProperty(orderId)) {
+            alert('No status change to save.');
+            return;
+        }
+
+        try {
+            // Get orders from localStorage
+            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            
+            // Find the order and update its status
+            const orderIndex = orders.findIndex(order => order.orderId === orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = orderStatuses[orderId];
+                
+                // Save back to localStorage
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Update the in-memory array
+                allOrders = orders;
+                
+                // Clear the pending status update
+                delete orderStatuses[orderId];
+                
+                // Refresh the orders table
+                populateOrdersTable(allOrders);
+                
+                alert(`Order ${orderId} status updated to ${orders[orderIndex].status} successfully!`);
+            } else {
+                alert('Order not found.');
+            }
+        } catch (error) {
+            console.error('Error saving order status:', error);
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    // Allow Enter key to submit login
+    document.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter' && document.getElementById('loginContainer').style.display !== 'none') {
+        login();
+      }
+    });
+  </script>
+
+  <script>
+    // Medicines data (load from localStorage or default)
+    let allMedicines = JSON.parse(localStorage.getItem('medicines')) || [];
+
+    // Show add medicine form
+    function showAddMedicineForm() {
+      document.getElementById('addMedicineForm').style.display = 'block';
+    }
+
+    // Cancel add medicine form
+    function cancelAddMedicine() {
+      document.getElementById('addMedicineForm').style.display = 'none';
+      // Clear form fields
+      document.getElementById('medicineName').value = '';
+      document.getElementById('medicinePrice').value = '';
+      document.getElementById('medicineCategory').value = 'Pain Relief';
+      document.getElementById('medicineStock').value = '';
+    }
+
+    // Add new medicine
+    function addNewMedicine() {
+      const name = document.getElementById('medicineName').value.trim();
+      const price = parseFloat(document.getElementById('medicinePrice').value);
+      const category = document.getElementById('medicineCategory').value;
+      const stock = parseInt(document.getElementById('medicineStock').value) || 0;
+
+      if (!name) {
+        alert('Please enter a medicine name');
+        return;
+      }
+
+      if (isNaN(price) || price <= 0) {
+        alert('Please enter a valid price');
+        return;
+      }
+
+      // Generate new ID (find max ID and add 1)
+      const maxId = allMedicines.reduce((max, med) => med.id > max ? med.id : max, 0);
+      const newId = maxId + 1;
+
+      // Create new medicine object
+      const newMedicine = {
+        id: newId,
+        name: name,
+        price: price,
+        category: category,
+        stock: stock
+      };
+
+      // Add to medicines array
+      allMedicines.push(newMedicine);
+
+      // Save to localStorage
+      localStorage.setItem('medicines', JSON.stringify(allMedicines));
+
+      // Update UI
+      populateMedicinesTable();
+      document.getElementById('totalProducts').textContent = allMedicines.length;
+
+      // Hide form and clear fields
+      cancelAddMedicine();
+
+      alert(`Medicine "${name}" added successfully!`);
+    }
+
+    // Populate medicines table
+    function populateMedicinesTable() {
+      const tbody = document.getElementById('medicinesTableBody');
+      tbody.innerHTML = '';
+      allMedicines.forEach(med => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${med.name}</td>
+          <td><input type="number" min="0" value="${med.price}" id="priceInput_${med.id}" style="width: 80px;"></td>
+          <td>${med.category}</td>
+          <td><input type="number" min="0" value="${med.stock}" id="stockInput_${med.id}" style="width: 80px;"></td>
+          <td>
+            <button onclick="saveMedicineData(${med.id})" style="margin-right: 5px;">Save</button>
+            <button onclick="deleteMedicine(${med.id})" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('totalProducts').textContent = allMedicines.length;
+    }
+
+    // Save medicine data (price and stock)
+    function saveMedicineData(medId) {
+      const priceInput = document.getElementById(`priceInput_${medId}`);
+      const stockInput = document.getElementById(`stockInput_${medId}`);
+      
+      const newPrice = parseFloat(priceInput.value);
+      const newStock = parseInt(stockInput.value);
+      
+      if (isNaN(newPrice) || newPrice < 0) {
+        alert('Please enter a valid price');
+        return;
+      }
+      
+      if (isNaN(newStock) || newStock < 0) {
+        alert('Please enter a valid stock quantity');
+        return;
+      }
+      
+      const med = allMedicines.find(m => m.id === medId);
+      if (med) {
+        med.price = newPrice;
+        med.stock = newStock;
+        localStorage.setItem('medicines', JSON.stringify(allMedicines));
+        alert(`Data for ${med.name} updated successfully!`);
+      }
+    }
+
+    // Delete medicine
+    function deleteMedicine(medId) {
+      if (!confirm('Are you sure you want to delete this medicine? This action cannot be undone.')) {
+        return;
+      }
+      
+      const medIndex = allMedicines.findIndex(m => m.id === medId);
+      if (medIndex !== -1) {
+        const medName = allMedicines[medIndex].name;
+        allMedicines.splice(medIndex, 1);
+        localStorage.setItem('medicines', JSON.stringify(allMedicines));
+        populateMedicinesTable();
+        document.getElementById('totalProducts').textContent = allMedicines.length;
+        alert(`Medicine "${medName}" deleted successfully!`);
+      }
+    }
+
+    // Populate UPI payments table
+    function populateUpiPaymentsTable() {
+      // Get orders from localStorage
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      
+      // Filter orders with UPI payment method
+      const upiOrders = orders.filter(order => order.paymentMethod === 'upi' && order.payment && order.payment.upiId);
+      
+      // Display all UPI payments
+      displayUpiPayments(upiOrders);
+    }
+
+    // Filter UPI payments
+    function filterUpiPayments() {
+      const searchTerm = document.getElementById('upiSearch').value.toLowerCase();
+      
+      // Get orders from localStorage
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      
+      // Filter orders with UPI payment method
+      let upiOrders = orders.filter(order => order.paymentMethod === 'upi' && order.payment && order.payment.upiId);
+      
+      // Apply search filter
+      if (searchTerm) {
+        upiOrders = upiOrders.filter(order => 
+          order.orderId.toLowerCase().includes(searchTerm) ||
+          order.payment.upiId.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Display filtered results
+      displayUpiPayments(upiOrders);
+    }
+    
+    // Display UPI payments in the table
+    function displayUpiPayments(upiOrders) {
+      const tableBody = document.getElementById('upiPaymentsTableBody');
+      tableBody.innerHTML = ''; // Clear existing rows
+
+      if (upiOrders.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">No UPI payments found.</td></tr>';
+        return;
+      }
+
+      upiOrders.forEach(order => {
+        const row = document.createElement('tr');
+        const orderDate = new Date(order.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        
+        // Define status options
+        const statusOptions = ['Pending', 'Processing', 'Completed', 'Failed'];
+        let statusOptionsHTML = '';
+        statusOptions.forEach(option => {
+          const selected = option === (order.status || 'Pending') ? 'selected' : '';
+          statusOptionsHTML += `<option value="${option}" ${selected}>${option}</option>`;
+        });
+        
+        row.innerHTML = `
+          <td>${order.orderId}</td>
+          <td>${order.payment.upiId}</td>
+          <td>₹${order.totalAmount.toFixed(2)}</td>
+          <td>${orderDate}</td>
+          <td>
+            <select onchange="updateUpiPaymentStatus('${order.orderId}', this.value)" style="padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+              ${statusOptionsHTML}
+            </select>
+          </td>
+          <td>
+            <button onclick="saveUpiPaymentStatus('${order.orderId}')" style="background: #10bfae; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+              Save
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Update UPI payment status in memory (not saved yet)
+    let upiPaymentStatuses = {}; // To track unsaved status changes
+    function updateUpiPaymentStatus(orderId, newStatus) {
+      // Store the new status in a temporary object
+      upiPaymentStatuses[orderId] = newStatus;
+    }
+
+    // Save UPI payment status to localStorage
+    function saveUpiPaymentStatus(orderId) {
+      // Check if there's a pending status update for this order
+      if (!upiPaymentStatuses.hasOwnProperty(orderId)) {
+        alert('No status change to save.');
+        return;
+      }
+
+      try {
+        // Get orders from localStorage
+        let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        
+        // Find the order and update its status
+        const orderIndex = orders.findIndex(order => order.orderId === orderId);
+        if (orderIndex !== -1) {
+          orders[orderIndex].status = upiPaymentStatuses[orderId];
+          
+          // Save back to localStorage
+          localStorage.setItem('orders', JSON.stringify(orders));
+          
+          // Update the in-memory array
+          allOrders = orders;
+          
+          // Clear the pending status update
+          delete upiPaymentStatuses[orderId];
+          
+          // Refresh the UPI payments table
+          populateUpiPaymentsTable();
+          
+          alert(`UPI payment for order ${orderId} status updated to ${orders[orderIndex].status} successfully!`);
+        } else {
+          alert('Order not found.');
+        }
+      } catch (error) {
+        console.error('Error saving UPI payment status:', error);
+        alert(`Error: ${error.message}`);
+      }
+    }
+    
+    // Save merchant UPI ID to localStorage
+    function saveMerchantUpiId() {
+      const upiId = document.getElementById('merchantUpiId').value.trim();
+      
+      // Validate UPI ID format
+      const upiIdRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/;
+      if (upiId && !upiIdRegex.test(upiId)) {
+        alert('Please enter a valid UPI ID format (e.g., yourname@bankname)');
+        return;
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('merchantUpiId', upiId);
+      alert(upiId ? 'UPI ID saved successfully!' : 'UPI ID cleared successfully!');
+    }
+    
+    // Load merchant UPI ID from localStorage
+    function loadMerchantUpiId() {
+      const upiId = localStorage.getItem('merchantUpiId') || '';
+      document.getElementById('merchantUpiId').value = upiId;
+    }
+    
+    // Call loadDashboardData when loading dashboard data
+    function loadDashboardData() {
+        try {
+            // Get users, orders, and medicines from localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+
+            // Ensure all orders have a status field
+            orders = orders.map(order => {
+                if (!order.hasOwnProperty('status')) {
+                    order.status = 'Pending'; // Default status
+                }
+                return order;
+            });
+
+            allUsers = users;
+            allOrders = orders;
+            allMedicines = medicines;
+
+            // Update stat cards
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('totalProducts').textContent = medicines.length;
+
+            // Process data for the chart
+            const monthlyOrders = {};
+            orders.forEach(order => {
+                const month = new Date(order.orderDate).toLocaleString('default', { month: 'short' });
+                monthlyOrders[month] = (monthlyOrders[month] || 0) + 1;
+            });
+
+            const chartLabels = Object.keys(monthlyOrders);
+            const chartData = Object.values(monthlyOrders);
+
+            initializeChart(chartLabels, chartData);
+
+            populateOrdersTable(allOrders);
+            populateUsersTable(allUsers);
+            populateMedicinesTable();
+            populateUpiPaymentsTable(); // Add this line to populate UPI payments table
+            loadMerchantUpiId(); // Load merchant UPI ID
+
+        } catch (error) {
+            console.error('Failed to load dashboard data:', error);
+            alert(`Could not load dashboard data: ${error.message}`);
+        }
+    }
+  </script>
+
+  <!-- Initialize sample data -->
+  <script src="init_data.js"></script>
+</body>
+</html>
